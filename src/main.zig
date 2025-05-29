@@ -1,6 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
 const rg = @import("raygui");
+const models = @import("models.zig");
 
 const key = rl.KeyboardKey;
 const color = rl.Color;
@@ -21,7 +22,7 @@ pub fn main() !void {
     defer _ = allocator.deinit();
     const alloc = allocator.allocator();
 
-    var balls_list = std.ArrayList(BallData).init(alloc);
+    var balls_list = std.ArrayList(models.BallData).init(alloc);
     defer balls_list.deinit();
 
     var prng = std.Random.DefaultPrng.init(blk: {
@@ -32,7 +33,7 @@ pub fn main() !void {
     const rand = prng.random();
 
     for (0..BALLS) |_| {
-        const data = BallData{
+        const data = models.BallData{
             .x = @floatFromInt(rand.intRangeAtMost(i32, 0, WINDOW_WIDTH)),
             .y = @floatFromInt(rand.intRangeAtMost(i32, 0, WINDOW_HEIGHT)),
         };
@@ -60,7 +61,7 @@ pub fn main() !void {
     }
 }
 
-fn on_frame(alloc: std.mem.Allocator, balls_list: std.ArrayList(BallData)) !void {
+fn on_frame(alloc: std.mem.Allocator, balls_list: std.ArrayList(models.BallData)) !void {
     rl.beginDrawing();
     defer rl.endDrawing();
 
@@ -90,8 +91,3 @@ fn on_tick() !void {
     if (rl.isKeyDown(key.up)) speed += 5;
     if (rl.isKeyDown(key.down)) speed -= 5;
 }
-
-const BallData = struct {
-    x: f32,
-    y: f32,
-};
