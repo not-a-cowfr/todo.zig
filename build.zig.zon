@@ -3,11 +3,15 @@
     .version = "0.0.0",
 
     // if forking, delete this and run `zig build` to generate a new one
-    .fingerprint = 0x10159def4ac255c2,
+    .fingerprint = 0x5a0eb6a0dfd282bd,
 
     .minimum_zig_version = "0.14.1",
 
     .dependencies = .{
+        .raylib_zig = .{
+            .url = "git+https://github.com/Not-Nik/raylib-zig?ref=devel#3bf08a304cfe2baf839705063ff999b8d8bc8c54",
+            .hash = "raylib_zig-5.6.0-dev-KE8REKAqBQAQugfCOjYYVRFOi7iaEJK1EMDcRUq8AOm2",
+        },
     },
 
     .paths = .{
