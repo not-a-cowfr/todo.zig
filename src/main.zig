@@ -95,10 +95,8 @@ pub fn on_tick(event: events.Event) void {
     if (rl.isKeyDown(key.down)) SPEED -= 1;
 
     for (event.components.balls.items) |*ball_data| {
-        if (ball_data.y + SPEED < WINDOW_HEIGHT) {
-            ball_data.y += SPEED;
-        } else {
-            ball_data.y = WINDOW_HEIGHT;
-        }
+        ball_data.y += SPEED;
+        ball_data.y = @min(@max(ball_data.y, 0), WINDOW_HEIGHT);
+        ball_data.x = @min(@max(ball_data.x, 0), WINDOW_WIDTH);
     }
 }
