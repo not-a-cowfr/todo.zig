@@ -25,7 +25,8 @@ pub fn main() !void {
     const alloc = allocator.allocator();
 
     // events init
-    var dispatcher = try handlers.init();
+    var dispatcher = try handlers.init(alloc);
+    defer dispatcher.deinit();
 
     // rng init
     var prng = std.Random.DefaultPrng.init(blk: {

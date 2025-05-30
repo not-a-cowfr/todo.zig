@@ -72,12 +72,8 @@ pub fn build(b: *std.Build) !void {
         \\
         \\{s}
         \\
-        \\pub fn init() !events.EventDispatcher {{
-        \\  var allocator = std.heap.GeneralPurposeAllocator(.{{}}){{}};
-        \\  defer _ = allocator.deinit();
-        \\  const alloc = allocator.allocator();
-        \\
-        \\  var dispatcher = events.EventDispatcher.init(alloc);
+        \\pub fn init(allocator: std.mem.Allocator) !events.EventDispatcher {{
+        \\  var dispatcher = events.EventDispatcher.init(allocator);
         \\  
         \\  {s}
         \\
