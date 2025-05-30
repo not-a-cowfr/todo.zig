@@ -12,7 +12,7 @@ const WINDOW_HEIGHT = 720;
 const WINDOW_WIDTH = 1280;
 
 const BALLS_COUNT = 100;
-var SPEED = @as(f32, 20);
+var SPEED = @as(f32, 10);
 
 pub fn main() !void {
     // raylib init
@@ -56,7 +56,7 @@ pub fn main() !void {
 
         const current_time = rl.getTime();
 
-        if (current_time - last_tick >= 0.05) {
+        if (current_time - last_tick >= 0.02) {
             // maybe make up for extremely shit fps by checking how much more the time since last tick is
             // like if the time since last tick is 0.5s then run 10 ticks instead of just 1
             last_tick = current_time;
@@ -90,8 +90,8 @@ pub fn on_frame(event: events.Event) void {
 
 // @EventHandler(Tick)
 pub fn on_tick(event: events.Event) void {
-    if (rl.isKeyDown(key.up)) SPEED += 5;
-    if (rl.isKeyDown(key.down)) SPEED -= 5;
+    if (rl.isKeyDown(key.up)) SPEED += 1;
+    if (rl.isKeyDown(key.down)) SPEED -= 1;
 
     for (event.components.balls.items) |*ball_data| {
         if (ball_data.y + SPEED < WINDOW_HEIGHT) {
