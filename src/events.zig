@@ -6,10 +6,9 @@ pub const EventType = enum {
     Frame,
 };
 
-pub const Event = union(EventType) {
-    Tick: struct {},
-    Frame: struct {
-        allocator: std.mem.Allocator,
+pub const Event = struct {
+    allocator: std.mem.Allocator,
+    components: struct {
         balls: std.ArrayList(models.BallData),
     },
 };
