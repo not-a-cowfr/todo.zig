@@ -48,22 +48,21 @@ pub fn main() !void {
         try balls_list.append(data);
     }
 
-    // main loop
-    var last_tick = rl.getTime();
+    _ = try std.Thread.spawn(.{}, tick_loop, .{ alloc, balls_list, &dispatcher });
 
+    // main loop
     while (!rl.windowShouldClose()) {
         const frame_event = events.Event{ .allocator = alloc, .components = .{ .balls = balls_list } };
         dispatcher.post(frame_event, events.EventType.Frame);
+    }
+}
 
-        const current_time = rl.getTime();
+fn tick_loop(allocator: std.mem.Allocator, balls_list: std.ArrayList(models.BallData), dispatcher: *events.EventDispatcher) void {
+    while (true) {
+        const tick_event = events.Event{ .allocator = allocator, .components = .{ .balls = balls_list } };
+        dispatcher.post(tick_event, events.EventType.Tick);
 
-        if (current_time - last_tick >= 0.02) {
-            // maybe make up for extremely shit fps by checking how much more the time since last tick is
-            // like if the time since last tick is 0.5s then run 10 ticks instead of just 1
-            last_tick = current_time;
-            const tick_event = events.Event{ .allocator = alloc, .components = .{ .balls = balls_list } };
-            dispatcher.post(tick_event, events.EventType.Tick);
-        }
+        std.time.sleep(20 * std.time.ns_per_ms);
     }
 }
 
