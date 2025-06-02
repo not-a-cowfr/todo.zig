@@ -6,17 +6,20 @@ pub const EventType = enum {
     Frame,
 };
 
-pub const Event = union(EventType) { Tick: struct {
-    allocator: std.mem.Allocator,
+pub const Event = union(EventType) {
+    Tick: struct {
+        allocator: std.mem.Allocator,
 
-    balls: std.ArrayList(models.BallData),
+        balls: std.ArrayList(models.BallData),
 
-    count: u128,
-}, Frame: struct {
-    allocator: std.mem.Allocator,
+        count: u128,
+    },
+    Frame: struct {
+        allocator: std.mem.Allocator,
 
-    balls: std.ArrayList(models.BallData),
-} };
+        balls: std.ArrayList(models.BallData),
+    },
+};
 
 pub const EventHandler = *const fn (event: Event) void;
 
