@@ -13,7 +13,9 @@ const WINDOW_WIDTH = 1280;
 const TPS = 50;
 
 const BALLS_COUNT = 100;
-var SPEED = @as(f32, 10);
+var BALL_MASS = @as(f32, 10);
+
+var GRAVITY = @as(f32, 10);
 
 pub fn main() !void {
     // raylib init
@@ -43,8 +45,14 @@ pub fn main() !void {
 
     for (0..BALLS_COUNT) |_| {
         const data = models.BallData{
-            .x = @floatFromInt(rand.intRangeAtMost(i32, 0, WINDOW_WIDTH)),
-            .y = @floatFromInt(rand.intRangeAtMost(i32, 0, WINDOW_HEIGHT)),
+            .pos = .{
+                .y = @floatFromInt(rand.intRangeAtMost(i32, 0, WINDOW_HEIGHT)),
+                .x = @floatFromInt(rand.intRangeAtMost(i32, 0, WINDOW_WIDTH)),
+            },
+            .velocity = .{
+                .x = 0,
+                .y = 0,
+            },
         };
         try balls_list.append(data);
     }
@@ -79,26 +87,34 @@ pub fn on_frame(event: events.Event) void {
     rl.clearBackground(color.white);
 
     for (event.components.balls.items) |*ball_data| {
-        rl.drawCircle(@intFromFloat(ball_data.x), @intFromFloat(ball_data.y), 10, color.blue);
+        rl.drawCircle(@intFromFloat(ball_data.pos.x), @intFromFloat(ball_data.pos.y), 10, color.blue);
     }
 
     const fps_text = std.fmt.allocPrintZ(allocator, "fps: {}", .{rl.getFPS()}) catch "Error";
     defer allocator.free(fps_text);
     rl.drawText(fps_text, 2, 0, 30, color.black);
 
-    const speed_text = std.fmt.allocPrintZ(allocator, "speed: {}", .{@as(i32, @intFromFloat(SPEED))}) catch "Error";
+    const speed_text = std.fmt.allocPrintZ(allocator, "gravity: {}", .{@as(i32, @intFromFloat(GRAVITY))}) catch "Error";
     defer allocator.free(speed_text);
     rl.drawText(speed_text, 2, 30, 30, color.black);
 }
 
 // @EventHandler(Tick)
 pub fn on_tick(event: events.Event) void {
-    if (rl.isKeyDown(key.up)) SPEED += 1;
-    if (rl.isKeyDown(key.down)) SPEED -= 1;
+    if (rl.isKeyDown(key.up)) GRAVITY += 1;
+    if (rl.isKeyDown(key.down)) GRAVITY -= 1;
 
     for (event.components.balls.items) |*ball_data| {
-        ball_data.y += SPEED;
-        ball_data.y = @min(@max(ball_data.y, 0), WINDOW_HEIGHT);
-        ball_data.x = @min(@max(ball_data.x, 0), WINDOW_WIDTH);
+        calcAcceleration(&ball_data.velocity);
+
+        ball_data.pos.x -= (ball_data.velocity.x / TPS);
+        ball_data.pos.y -= (ball_data.velocity.y / TPS);
+
+        ball_data.pos.y = @min(@max(ball_data.pos.y, 0), WINDOW_HEIGHT);
+        ball_data.pos.x = @min(@max(ball_data.pos.x, 0), WINDOW_WIDTH);
     }
+}
+
+fn calcAcceleration(velocity: *models.Vec2) void {
+    velocity.y -= GRAVITY;
 }
