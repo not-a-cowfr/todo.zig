@@ -58,7 +58,7 @@ pub fn main() !void {
 
     // main loop
     while (!rl.windowShouldClose()) {
-        const frame_event = events.Event{ .allocator = alloc, .components = .{ .balls = balls_list } };
+        const frame_event = events.Event{ .Frame = .{ .allocator = alloc, .balls = balls_list } };
         dispatcher.post(frame_event, events.EventType.Frame);
     }
 }
@@ -67,7 +67,7 @@ fn tick_loop(allocator: std.mem.Allocator, balls_list: std.ArrayList(models.Ball
     const interval: f64 = (1 * std.time.ns_per_s) / TPS;
 
     while (true) {
-        const tick_event = events.Event{ .allocator = allocator, .components = .{ .balls = balls_list } };
+        const tick_event = events.Event{ .Tick = .{ .allocator = allocator, .balls = balls_list } };
         dispatcher.post(tick_event, events.EventType.Tick);
 
         std.time.sleep(interval);
@@ -75,7 +75,8 @@ fn tick_loop(allocator: std.mem.Allocator, balls_list: std.ArrayList(models.Ball
 }
 
 // @EventHandler(Frame)
-pub fn on_frame(event: events.Event) void {
+pub fn on_frame(e: events.Event) void {
+    const event = e.Frame;
     const allocator = event.allocator;
 
     rl.beginDrawing();
@@ -83,7 +84,7 @@ pub fn on_frame(event: events.Event) void {
 
     rl.clearBackground(color.white);
 
-    for (event.components.balls.items) |*ball_data| {
+    for (event.balls.items) |*ball_data| {
         rl.drawCircle(@intFromFloat(ball_data.pos.x), @intFromFloat(ball_data.pos.y), 10, color.blue);
     }
 

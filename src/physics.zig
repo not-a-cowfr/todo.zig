@@ -12,13 +12,15 @@ pub var GRAVITY = @as(f32, 10);
 pub const MASS_DAMPING = 100.0;
 
 // @EventHandler(Tick)
-pub fn on_tick(event: events.Event) void {
+pub fn on_tick(e: events.Event) void {
+    const event = e.Tick;
+
     if (rl.isKeyDown(key.up)) GRAVITY -= 1;
     if (rl.isKeyDown(key.down)) GRAVITY += 1;
 
     const MASS_FACTOR = 1.0 - (BALL_MASS / MASS_DAMPING);
 
-    for (event.components.balls.items) |*ball_data| {
+    for (event.balls.items) |*ball_data| {
         calcAcceleration(&ball_data.velocity);
 
         ball_data.pos.x -= (ball_data.velocity.x / main.TPS);
