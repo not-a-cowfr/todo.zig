@@ -16,6 +16,8 @@ const BALLS_COUNT = 100;
 var BALL_MASS = @as(f32, 10);
 
 var GRAVITY = @as(f32, 10);
+// 100 = no energy lost, 0 = all energy lost
+const MASS_DAMPING = 100.0;
 
 pub fn main() !void {
     // raylib init
@@ -101,8 +103,10 @@ pub fn on_frame(event: events.Event) void {
 
 // @EventHandler(Tick)
 pub fn on_tick(event: events.Event) void {
-    if (rl.isKeyDown(key.up)) GRAVITY += 1;
-    if (rl.isKeyDown(key.down)) GRAVITY -= 1;
+    if (rl.isKeyDown(key.up)) GRAVITY -= 1;
+    if (rl.isKeyDown(key.down)) GRAVITY += 1;
+
+    const MASS_FACTOR = 1.0 - (BALL_MASS / MASS_DAMPING);
 
     for (event.components.balls.items) |*ball_data| {
         calcAcceleration(&ball_data.velocity);
@@ -110,8 +114,14 @@ pub fn on_tick(event: events.Event) void {
         ball_data.pos.x -= (ball_data.velocity.x / TPS);
         ball_data.pos.y -= (ball_data.velocity.y / TPS);
 
-        ball_data.pos.y = @min(@max(ball_data.pos.y, 0), WINDOW_HEIGHT);
-        ball_data.pos.x = @min(@max(ball_data.pos.x, 0), WINDOW_WIDTH);
+        if (ball_data.pos.x <= 0 or ball_data.pos.x >= WINDOW_WIDTH) {
+            ball_data.velocity.x *= -1 * MASS_FACTOR;
+            ball_data.pos.x = @min(@max(ball_data.pos.x, 0), WINDOW_WIDTH);
+        }
+        if (ball_data.pos.y <= 0 or ball_data.pos.y >= WINDOW_HEIGHT) {
+            ball_data.velocity.y *= -1 * MASS_FACTOR;
+            ball_data.pos.y = @min(@max(ball_data.pos.y, 0), WINDOW_HEIGHT);
+        }
     }
 }
 
