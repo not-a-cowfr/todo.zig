@@ -4,20 +4,15 @@ const rg = @import("raygui");
 const handlers = @import("dispatch_gen.zig");
 const models = @import("models.zig");
 const events = @import("events.zig");
+const physics = @import("physics.zig");
 
-const key = rl.KeyboardKey;
 const color = rl.Color;
 
-const WINDOW_HEIGHT = 720;
-const WINDOW_WIDTH = 1280;
-const TPS = 50;
+pub const WINDOW_HEIGHT = 720;
+pub const WINDOW_WIDTH = 1280;
+pub const TPS = 50;
 
-const BALLS_COUNT = 100;
-var BALL_MASS = @as(f32, 10);
-
-var GRAVITY = @as(f32, 10);
-// 100 = no energy lost, 0 = all energy lost
-const MASS_DAMPING = 100.0;
+pub const BALLS_COUNT = 100;
 
 pub fn main() !void {
     // raylib init
@@ -96,35 +91,7 @@ pub fn on_frame(event: events.Event) void {
     defer allocator.free(fps_text);
     rl.drawText(fps_text, 2, 0, 30, color.black);
 
-    const speed_text = std.fmt.allocPrintZ(allocator, "gravity: {}", .{@as(i32, @intFromFloat(GRAVITY))}) catch "Error";
+    const speed_text = std.fmt.allocPrintZ(allocator, "gravity: {}", .{@as(i32, @intFromFloat(physics.GRAVITY))}) catch "Error";
     defer allocator.free(speed_text);
     rl.drawText(speed_text, 2, 30, 30, color.black);
-}
-
-// @EventHandler(Tick)
-pub fn on_tick(event: events.Event) void {
-    if (rl.isKeyDown(key.up)) GRAVITY -= 1;
-    if (rl.isKeyDown(key.down)) GRAVITY += 1;
-
-    const MASS_FACTOR = 1.0 - (BALL_MASS / MASS_DAMPING);
-
-    for (event.components.balls.items) |*ball_data| {
-        calcAcceleration(&ball_data.velocity);
-
-        ball_data.pos.x -= (ball_data.velocity.x / TPS);
-        ball_data.pos.y -= (ball_data.velocity.y / TPS);
-
-        if (ball_data.pos.x <= 0 or ball_data.pos.x >= WINDOW_WIDTH) {
-            ball_data.velocity.x *= -1 * MASS_FACTOR;
-            ball_data.pos.x = @min(@max(ball_data.pos.x, 0), WINDOW_WIDTH);
-        }
-        if (ball_data.pos.y <= 0 or ball_data.pos.y >= WINDOW_HEIGHT) {
-            ball_data.velocity.y *= -1 * MASS_FACTOR;
-            ball_data.pos.y = @min(@max(ball_data.pos.y, 0), WINDOW_HEIGHT);
-        }
-    }
-}
-
-fn calcAcceleration(velocity: *models.Vec2) void {
-    velocity.y -= GRAVITY;
 }
