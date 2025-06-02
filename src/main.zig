@@ -64,7 +64,7 @@ pub fn main() !void {
 }
 
 fn tick_loop(allocator: std.mem.Allocator, balls_list: std.ArrayList(models.BallData), dispatcher: *events.EventDispatcher) void {
-    const interval: f64 = (1 * std.time.ns_per_s) / TPS;
+    const interval: f64 = std.time.ns_per_s / TPS;
     var count: u128 = 0;
 
     while (true) {
