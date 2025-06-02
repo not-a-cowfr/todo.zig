@@ -10,6 +10,7 @@ const color = rl.Color;
 
 const WINDOW_HEIGHT = 720;
 const WINDOW_WIDTH = 1280;
+const TPS = 50;
 
 const BALLS_COUNT = 100;
 var SPEED = @as(f32, 10);
@@ -58,11 +59,13 @@ pub fn main() !void {
 }
 
 fn tick_loop(allocator: std.mem.Allocator, balls_list: std.ArrayList(models.BallData), dispatcher: *events.EventDispatcher) void {
+    const interval: f64 = (1 * std.time.ns_per_s) / TPS;
+
     while (true) {
         const tick_event = events.Event{ .allocator = allocator, .components = .{ .balls = balls_list } };
         dispatcher.post(tick_event, events.EventType.Tick);
 
-        std.time.sleep(20 * std.time.ns_per_ms);
+        std.time.sleep(interval);
     }
 }
 
