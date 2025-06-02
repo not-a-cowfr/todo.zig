@@ -10,6 +10,8 @@ pub const Event = union(EventType) { Tick: struct {
     allocator: std.mem.Allocator,
 
     balls: std.ArrayList(models.BallData),
+
+    count: u128,
 }, Frame: struct {
     allocator: std.mem.Allocator,
 

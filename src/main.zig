@@ -65,9 +65,11 @@ pub fn main() !void {
 
 fn tick_loop(allocator: std.mem.Allocator, balls_list: std.ArrayList(models.BallData), dispatcher: *events.EventDispatcher) void {
     const interval: f64 = (1 * std.time.ns_per_s) / TPS;
+    var count: u128 = 0;
 
     while (true) {
-        const tick_event = events.Event{ .Tick = .{ .allocator = allocator, .balls = balls_list } };
+        count += 1;
+        const tick_event = events.Event{ .Tick = .{ .allocator = allocator, .balls = balls_list, .count = count } };
         dispatcher.post(tick_event, events.EventType.Tick);
 
         std.time.sleep(interval);
