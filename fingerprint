@@ -1,0 +1,14 @@
+#!/bin/bash
+
+FILE="./build.zig.zon"
+
+LINE_NUM=$(grep -n '\.fingerprint = [a-zA-Z0-9_]\+,' "$FILE" | cut -d: -f1)
+sed -i "${LINE_NUM}d" "$FILE"
+
+OUTPUT=$(LC_ALL=C zig build run 2>&1)
+
+FINGERPRINT=$(echo "$OUTPUT" | sed -n "s/.*suggested value: \([a-zA-Z0-9_]\+\)/\1/p")
+
+if [[ -n "$FINGERPRINT" ]]; then
+    sed -i "${LINE_NUM}i\\    .fingerprint = $FINGERPRINT," "$FILE"
+fi

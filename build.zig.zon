@@ -2,8 +2,8 @@
     .name = .todo,
     .version = "0.0.0",
 
-    // if forking, delete this and run `zig build` to generate a new one
-    .fingerprint = 0x5a0eb6a0dfd282bd,
+    // read contibuting guide
+    .fingerprint = 0x5a0eb6a0016954a2,
 
     .minimum_zig_version = "0.14.1",
 

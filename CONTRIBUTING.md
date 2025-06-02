@@ -1,18 +1,13 @@
 # Running
 
-1. close the repo
+1. clone the repo
 ```sh
 git clone https://github.com/not-a-cowfr/water.zig.git
 ```
 2. update the fingerprint
-
-    a. delete the fingerprint in [build.zig.zon](./build.zig.zon)
-
-    b. run the project
-    ```sh
-    zig build run
-    ```
-    c. copy the fingerprint in the error and add it to your [build.zig.zon](./build.zig.zon)
+```sh
+./fingerprint
+```
 3. run the project
 ```sh
 zig build run
