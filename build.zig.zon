@@ -1,5 +1,5 @@
 .{
-    .name = .todo,
+    .name = .water,
     .version = "0.0.0",
 
     // read contibuting guide
