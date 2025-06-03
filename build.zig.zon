@@ -3,14 +3,14 @@
     .version = "0.0.0",
 
     // read contibuting guide
-    .fingerprint = 0x5a0eb6a0016954a2,
+    .fingerprint = 0xfb3314da32880c9e,
 
     .minimum_zig_version = "0.14.1",
 
     .dependencies = .{
         .raylib_zig = .{
-            .url = "git+https://github.com/Not-Nik/raylib-zig?ref=devel#3bf08a304cfe2baf839705063ff999b8d8bc8c54",
-            .hash = "raylib_zig-5.6.0-dev-KE8REKAqBQAQugfCOjYYVRFOi7iaEJK1EMDcRUq8AOm2",
+            .url = "git+https://github.com/not-a-cowfr/raylib-zig?ref=devel#d054e269a31080f83193e26f915189eb7fd67a1f",
+            .hash = "raylib_zig-5.6.0-dev-Lf1UDbgqBQAt1O18kgjer5oY90MIO0kumbzc2Y0UddhN",
         },
     },
 

@@ -1,4 +1,7 @@
 const std = @import("std");
+
+const rl = @import("raylib");
+
 const models = @import("models.zig");
 
 pub const EventType = enum {
@@ -17,7 +20,13 @@ pub const Event = union(EventType) {
     Frame: struct {
         allocator: std.mem.Allocator,
 
-        balls: std.ArrayList(models.BallData),
+        rendering: struct {
+            balls: std.ArrayList(models.BallData),
+            shader: rl.Shader,
+            batch: rl.gl.rlRenderBatch,
+            use_instanced: bool,
+            camera: rl.Camera2D,
+        },
     },
 };
 
